@@ -8,8 +8,8 @@
     "https://www.googleapis.com/auth/script.external_request"
   ],
   "urlFetchWhitelist": [
-    "https://REPLACE-WITH-YOUR-CLOUD-RUN-URL/"
-  ],
+  "https://mail-scorer-743579014756.me-west1.run.app/"
+],
   "addOns": {
     "common": {
       "name": "Mail Scorer",
