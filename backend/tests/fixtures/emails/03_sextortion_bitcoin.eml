@@ -1,0 +1,19 @@
+Authentication-Results: mx.google.com;
+       dkim=none header.i=@mail-secure-relay.ru;
+       spf=neutral smtp.mailfrom=mail-secure-relay.ru;
+       dmarc=none header.from=mail-secure-relay.ru
+X-Mail-Scorer-Demo: simulated
+From: Hacker <no-reply@mail-secure-relay.ru>
+To: noam@example.com
+Subject: Your device was hacked
+Date: Thu, 15 Oct 2026 08:00:00 +0000
+Message-ID: <demo-2-1792056873818@mail-scorer.demo>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+SSBoYXZlIHJlY29yZGVkIHlvdSB0aHJvdWdoIHlvdXIgd2ViY2FtLiBZb3VyIGRldmljZSB3YXMg
+aGFja2VkIG1vbnRocyBhZ28gYW5kIEkga25vdyB5b3VyIHBhc3N3b3JkLiBQYXkgMTIwMCBVU0Qg
+aW4gYml0Y29pbiB0byBiYzFxYXIwc3Jycjd4Zmt2eTVsNjQzbHlkbnc5cmU1OWd0enp3ZjVtZHEg
+d2l0aGluIDQ4IGhvdXJzLCBvciBJIHdpbGwgc2VuZCB0aGUgdmlkZW8gdG8gYWxsIHlvdXIgY29u
+dGFjdHMu

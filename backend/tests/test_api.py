@@ -1,10 +1,19 @@
 """End-to-end tests through the HTTP API, including the security controls."""
 
+import httpx
 from fastapi.testclient import TestClient
 
-from app.main import app
+from app.main import app, http_client
 from tests.conftest import make_headers
 
+
+async def offline_client():
+    """Every outbound call gets a 404, so API tests never touch the network."""
+    async with httpx.AsyncClient(transport=httpx.MockTransport(lambda request: httpx.Response(404))) as c:
+        yield c
+
+
+app.dependency_overrides[http_client] = offline_client
 client = TestClient(app)
 AUTH = {"X-Api-Key": "test-key"}
 
@@ -72,5 +81,63 @@ def test_many_weak_signals_stay_below_malicious():
 
 def test_response_shape():
     result = analyze(raw_headers=make_headers())
-    assert set(result) == {"score", "verdict", "level", "summary", "findings", "category_scores"}
+    assert set(result) == {"score", "verdict", "level", "summary", "findings", "category_scores",
+                           "gauge_path", "report_path", "checks"}
+    statuses = {c["name"]: c["status"] for c in result["checks"]}
+    assert statuses["VirusTotal"] == "not_configured"  # no key in tests
     assert set(result["category_scores"]) == {"authentication", "sender", "links", "content", "attachments"}
+    assert result["gauge_path"] == f"/gauge/{result['score']}.gif"
+
+
+def test_findings_include_tips():
+    result = analyze(raw_headers=make_headers(), attachments=[{"name": "scan.exe"}])
+    assert result["findings"][0]["tip"]
+
+
+# --- gauge image ------------------------------------------------------------
+
+def test_gauge_is_a_public_gif():
+    response = client.get("/gauge/42.gif")
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "image/gif"
+    assert response.content[:6] == b"GIF89a"
+
+
+def test_gauge_rejects_out_of_range_scores():
+    assert client.get("/gauge/101.gif").status_code == 404
+    assert client.get("/gauge/-1.gif").status_code in (404, 422)
+    assert client.get("/gauge/abc.gif").status_code in (404, 422)
+
+
+# --- report page ------------------------------------------------------------
+
+def test_report_page_and_security_headers():
+    result = analyze(raw_headers=make_headers(), subject="Quarterly report")
+    response = client.get(result["report_path"])
+    assert response.status_code == 200
+    assert "Quarterly report" in response.text
+    csp = response.headers["content-security-policy"]
+    assert "default-src 'none'" in csp and "script" not in csp
+    assert response.headers["cache-control"] == "no-store"
+    assert "<script" not in response.text
+
+
+def test_report_escapes_email_content():
+    attack = '<script>alert(1)</script><img src=x onerror=alert(2)>'
+    result = analyze(raw_headers=make_headers(), subject=attack)
+    page = client.get(result["report_path"]).text
+    assert "<script>alert" not in page and "<img src=x" not in page
+    assert "&lt;script&gt;" in page
+
+
+def test_unknown_or_malformed_report_token():
+    assert client.get("/report/" + "a" * 32).status_code == 404
+    assert client.get("/report/../../etc/passwd").status_code == 404
+    assert "expired" in client.get("/report/short").text
+
+
+def test_report_expires():
+    from app.report_store import ReportStore
+    store = ReportStore(ttl=0)
+    token = store.put({"x": 1})
+    assert store.get(token) is None

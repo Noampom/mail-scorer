@@ -23,6 +23,7 @@ _MULTI_CHAR_CONFUSABLES = (("rn", "m"), ("vv", "w"), ("cl", "d"))
 _PHISHING_WORDS = (
     "secure", "login", "logon", "signin", "verify", "verification", "account", "update",
     "support", "service", "billing", "auth", "alert", "unlock", "recover", "confirm", "wallet",
+    "delivery", "parcel", "tracking", "payment", "refund",
 )
 
 
@@ -104,19 +105,23 @@ def find_impersonated_brand(host: str) -> str | None:
         return None
     label = domain.split(".", 1)[0]
     label_skeleton = skeleton(label)
-    tokens = re.split(r"[-_.]", label)
+    # Check each part of a hyphenated name on its own: rnicrosoft-365.com
+    # imitates Microsoft even though the whole label does not.
+    tokens = [t for t in re.split(r"[-_]", label) if t]
+    has_phishing_word = any(word in skeleton(t) for t in tokens for word in _PHISHING_WORDS)
 
     for brand, legit_domains in BRANDS.items():
         if domain in legit_domains or label == brand:
             # Exact brand label on any suffix (google.co.il, amazon.de) is
             # treated as legitimate: country domains are too common to flag.
             continue
-        if label_skeleton == brand:
-            return brand  # homoglyph look-alike
-        if len(brand) >= 5 and len(label) >= 5 and edit_distance(label, brand) == 1:
-            return brand  # one-character typo
-        if len(brand) >= 4 and brand in tokens:
-            return brand  # paypal-secure.com
+        for token in tokens:
+            if token != brand and skeleton(token) == brand:
+                return brand  # homoglyph look-alike: paypa1, rnicrosoft
+            if len(brand) >= 5 and len(token) >= 5 and edit_distance(token, brand) == 1:
+                return brand  # one-character typo: paypall
+        if brand in tokens and (len(brand) >= 4 or has_phishing_word):
+            return brand  # paypal-secure.com, dhl-delivery-support.com
         if len(brand) >= 5 and brand in label_skeleton:
             rest = label_skeleton.replace(brand, "", 1)
             if any(word in rest for word in _PHISHING_WORDS):

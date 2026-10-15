@@ -34,7 +34,8 @@ var LEVEL_COLOR = {
   malicious: '#A50E0E'
 };
 
-var MAX_FINDINGS_SHOWN = 6;
+var MAX_FINDINGS_SHOWN = 8;
+var VISIBLE_FINDINGS = 3;
 var LRM = '‎'; // keeps "37 / 100" in order inside right-to-left Gmail
 
 // ---------------------------------------------------------------- triggers
@@ -130,16 +131,42 @@ function callBackend_(path, payload) {
 // -------------------------------------------------------------------- cards
 
 function buildResultCard_(result) {
+  var baseUrl = PropertiesService.getScriptProperties().getProperty('BACKEND_URL');
   var color = LEVEL_COLOR[result.level] || '#5F6368';
+  var score = Number(result.score);
 
-  var verdictSection = CardService.newCardSection()
-    .addWidget(CardService.newDecoratedText()
+  var verdictSection = CardService.newCardSection();
+  if (isPath_(result.gauge_path, '/gauge/')) {
+    // Animated gauge: the image URL contains only the score, never email data.
+    verdictSection.addWidget(CardService.newImage()
+      .setImageUrl(baseUrl + result.gauge_path)
+      .setAltText('Risk score ' + score + ' out of 100: ' + result.verdict));
+  } else {
+    verdictSection.addWidget(CardService.newDecoratedText()
       .setTopLabel('Risk score')
-      .setText('<font color="' + color + '"><b>' + LRM + Number(result.score) + ' / 100</b></font>'))
-    .addWidget(CardService.newDecoratedText()
-      .setTopLabel('Verdict')
-      .setText('<font color="' + color + '"><b>' + escapeHtml_(result.verdict) + '</b></font>'))
-    .addWidget(CardService.newTextParagraph().setText(escapeHtml_(result.summary)));
+      .setText('<font color="' + color + '"><b>' + LRM + score + ' / 100</b></font>'));
+  }
+  verdictSection.addWidget(CardService.newTextParagraph()
+    .setText(ltr_('<font color="' + color + '"><b>' + escapeHtml_(result.verdict) + '.</b></font> ' +
+      escapeHtml_(result.summary))));
+
+  // Name the external checks that actually ran; turned-off ones are not shown.
+  var ran = (result.checks || []).filter(function (c) { return c.status === 'ok'; })
+    .map(function (c) { return escapeHtml_(c.name); });
+  if (ran.length) {
+    verdictSection.addWidget(CardService.newTextParagraph().setText(
+      ltr_('<font color="#5F6368">Also checked with: ' + ran.join(', ') + '</font>')));
+  }
+
+  if (isPath_(result.report_path, '/report/')) {
+    verdictSection.addWidget(CardService.newButtonSet().addButton(
+      CardService.newTextButton()
+        .setText('Open full report')
+        .setTextButtonStyle(CardService.TextButtonStyle.FILLED)
+        .setOpenLink(CardService.newOpenLink()
+          .setUrl(baseUrl + result.report_path)
+          .setOpenAs(CardService.OpenAs.FULL_SIZE))));
+  }
 
   var card = CardService.newCardBuilder()
     .setHeader(CardService.newCardHeader().setTitle('Mail Scorer'))
@@ -152,11 +179,20 @@ function buildResultCard_(result) {
   if (shown.length) {
     var reasons = CardService.newCardSection().setHeader('Why');
     shown.forEach(function (finding) {
-      reasons.addWidget(CardService.newTextParagraph().setText(formatFinding_(finding)));
+      reasons.addWidget(CardService.newTextParagraph().setText(ltr_(formatFinding_(finding))));
     });
+    if (shown.length > VISIBLE_FINDINGS) {
+      // Top reasons stay visible; the rest fold behind "Show more".
+      reasons.setCollapsible(true).setNumUncollapsibleWidgets(VISIBLE_FINDINGS);
+    }
     card.addSection(reasons);
   }
   return card.build();
+}
+
+/** Only follow backend paths of the expected shape. */
+function isPath_(path, prefix) {
+  return typeof path === 'string' && path.indexOf(prefix) === 0 && /^[\w\/.\-]+$/.test(path);
 }
 
 function formatFinding_(finding) {
@@ -168,6 +204,14 @@ function formatFinding_(finding) {
       finding.evidence.map(escapeHtml_).join('<br>') + '</font>';
   }
   return html;
+}
+
+/**
+ * Wrap English text in left-to-right marks. In right-to-left Gmail (e.g. Hebrew)
+ * this keeps periods and quotes at the edges of a sentence on the correct side.
+ */
+function ltr_(html) {
+  return LRM + html + LRM;
 }
 
 function buildErrorCard_() {

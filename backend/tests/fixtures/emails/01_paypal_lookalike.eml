@@ -1,0 +1,31 @@
+Authentication-Results: mx.google.com;
+       dkim=none header.i=@paypa1-support.com;
+       spf=softfail smtp.mailfrom=paypa1-support.com;
+       dmarc=fail header.from=paypa1-support.com
+X-Mail-Scorer-Demo: simulated
+From: PayPal Security <service@paypa1-support.com>
+To: noam@example.com
+Subject: Urgent: your account has been limited
+Date: Thu, 15 Oct 2026 08:00:00 +0000
+Message-ID: <demo-0-1792056873817@mail-scorer.demo>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="alt-8dwj3l0akuh"
+
+--alt-8dwj3l0akuh
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+V2Ugbm90aWNlZCB1bnVzdWFsIHNpZ24taW4gYWN0aXZpdHkgb24geW91ciBhY2NvdW50LiBWZXJp
+ZnkgeW91ciBhY2NvdW50IGltbWVkaWF0ZWx5IG9yIHlvdXIgYWNjb3VudCB3aWxsIGJlIHN1c3Bl
+bmRlZCB3aXRoaW4gMjQgaG91cnMu
+--alt-8dwj3l0akuh
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+PHA+RGVhciBjdXN0b21lciw8L3A+PHA+V2Ugbm90aWNlZCA8Yj51bnVzdWFsIHNpZ24taW4gYWN0
+aXZpdHk8L2I+IG9uIHlvdXIgYWNjb3VudC4gVmVyaWZ5IHlvdXIgYWNjb3VudCBpbW1lZGlhdGVs
+eSBvciB5b3VyIGFjY291bnQgd2lsbCBiZSBzdXNwZW5kZWQgd2l0aGluIDI0IGhvdXJzLjwvcD48
+cD48YSBocmVmPSJodHRwOi8vcGF5cGExLXN1cHBvcnQuY29tL3NpZ25pbi92ZXJpZnkiPmh0dHBz
+Oi8vd3d3LnBheXBhbC5jb20vc2lnbmluPC9hPjwvcD48cD5QYXlQYWwgU2VjdXJpdHkgVGVhbTwv
+cD4=
+--alt-8dwj3l0akuh--

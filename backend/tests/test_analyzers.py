@@ -44,6 +44,15 @@ def test_lookalike_sender_domain(payload):
     assert "sender.lookalike_domain" in ids(sender.analyze(parse_email(payload(headers))))
 
 
+def test_lookalike_detection_edge_cases():
+    from app.domains import find_impersonated_brand
+    assert find_impersonated_brand("rnicrosoft-365.com") == "microsoft"  # per-part homoglyph
+    assert find_impersonated_brand("dhl-delivery-support.com") == "dhl"  # short brand + phishing word
+    assert find_impersonated_brand("leumi-secure-verify.com") == "leumi"
+    for legit in ("pineapple.com", "google.co.il", "accounts.google.com", "upsidedown.com", "ups-and-downs.net"):
+        assert find_impersonated_brand(legit) is None, legit
+
+
 def test_display_name_with_other_address(payload):
     headers = make_headers(from_='"security@paypal.com" <x@evil-domain.net>')
     assert "sender.display_name_address" in ids(sender.analyze(parse_email(payload(headers))))

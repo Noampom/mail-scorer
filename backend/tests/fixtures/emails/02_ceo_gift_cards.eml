@@ -1,0 +1,19 @@
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@acme-corp.com;
+       spf=pass smtp.mailfrom=acme-corp.com;
+       dmarc=pass header.from=acme-corp.com
+X-Mail-Scorer-Demo: simulated
+From: "Dana Cohen (CEO)" <dana.cohen@acme-corp.com>
+To: noam@example.com
+Reply-To: dana.cohen.office@gmail.com
+Subject: Quick favor
+Date: Thu, 15 Oct 2026 08:00:00 +0000
+Message-ID: <demo-1-1792056873818@mail-scorer.demo>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+SGksIGFyZSB5b3UgYXQgeW91ciBkZXNrPyBJIG5lZWQgeW91IHRvIGJ1eSA1IEFwcGxlIGdpZnQg
+Y2FyZHMgb2YgJDIwMCBlYWNoIGZvciBhIGNsaWVudCBtZWV0aW5nLiBJdCBpcyB1cmdlbnQgYW5k
+IGNvbmZpZGVudGlhbC4gU2VuZCBtZSB0aGUgY29kZXMgYnkgcmVwbHkgYXMgc29vbiBhcyB5b3Ug
+aGF2ZSB0aGVtLgoKRGFuYQ==

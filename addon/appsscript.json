@@ -13,6 +13,9 @@
   "addOns": {
     "common": {
       "name": "Mail Scorer",
+      "openLinkUrlPrefixes": [
+    "https://mail-scorer-743579014756.me-west1.run.app/"
+  ],
       "logoUrl": "https://www.gstatic.com/images/icons/material/system/1x/security_black_48dp.png",
       "homepageTrigger": {
         "runFunction": "onHomepage"

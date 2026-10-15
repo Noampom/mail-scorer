@@ -1,0 +1,18 @@
+Authentication-Results: mx.google.com;
+       dkim=none header.i=@leumi-secure-verify.com;
+       spf=softfail smtp.mailfrom=leumi-secure-verify.com;
+       dmarc=none header.from=leumi-secure-verify.com
+X-Mail-Scorer-Demo: simulated
+From: =?UTF-8?B?15HXoNenINec15DXldee15k=?= <alerts@leumi-secure-verify.com>
+To: noam@example.com
+Subject: =?UTF-8?B?15PXl9eV16M6INeU15fXqdeR15XXnyDXqdec15og15nXldep16LXlA==?=
+Date: Thu, 15 Oct 2026 08:00:00 +0000
+Message-ID: <demo-5-1792056873819@mail-scorer.demo>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+15zXp9eV15cg15nXp9eoLCDXlteZ15TXmdeg15Ug16TXoteZ15zXldeqINeX16jXmdeS15QuINeU
+15fXqdeR15XXnyDXqdec15og15nXldep16LXlCDXkdeQ15XXpNefINee15nXmdeT15kuINeQ157X
+qiDXkNeqINeU15fXqdeR15XXnyDXqdec15og15vXkNefOiBodHRwOi8vMTkyLjAuMi4xNS9sZXVt
+aS9sb2dpbg==

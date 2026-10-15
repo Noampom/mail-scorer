@@ -1,0 +1,27 @@
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@acme-corp.com;
+       spf=pass smtp.mailfrom=acme-corp.com;
+       dmarc=pass header.from=acme-corp.com
+X-Mail-Scorer-Demo: simulated
+From: Noa Levi <noa.levi@acme-corp.com>
+To: noam@example.com
+Subject: Notes from today's meeting
+Date: Thu, 15 Oct 2026 08:00:00 +0000
+Message-ID: <demo-6-1792056873820@mail-scorer.demo>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="alt-wcihqng40m"
+
+--alt-wcihqng40m
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+SGksIGF0dGFjaGVkIGFyZSB0aGUgbm90ZXMgZnJvbSB0b2RheSdzIGRlc2lnbiByZXZpZXcuIFNl
+ZSB5b3Ugb24gU3VuZGF5IQoKTm9h
+--alt-wcihqng40m
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+PHA+SGksPC9wPjxwPkhlcmUgYXJlIHRoZSA8YSBocmVmPSJodHRwczovL2RvY3MuZ29vZ2xlLmNv
+bS9kb2N1bWVudC9kL2RlbW8iPm5vdGVzIGZyb20gdG9kYXkncyBkZXNpZ24gcmV2aWV3PC9hPi48
+L3A+PHA+U2VlIHlvdSBvbiBTdW5kYXkhPC9wPjxwPk5vYTwvcD4=
+--alt-wcihqng40m--

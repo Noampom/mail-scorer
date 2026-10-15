@@ -35,6 +35,13 @@ class FindingOut(BaseModel):
     title: str
     explanation: str
     evidence: list[str]
+    tip: str = ""
+
+
+class CheckOut(BaseModel):
+    name: str
+    status: str  # ok | unavailable | not_configured | skipped
+    detail: str = ""
 
 
 class AnalyzeResponse(BaseModel):
@@ -44,3 +51,6 @@ class AnalyzeResponse(BaseModel):
     summary: str
     findings: list[FindingOut]
     category_scores: dict[str, int]
+    gauge_path: str  # relative to the backend URL; contains only the score
+    report_path: str  # unguessable, expires after 30 minutes
+    checks: list[CheckOut]  # status of each external threat-intel check

@@ -1,0 +1,44 @@
+Authentication-Results: mx.google.com;
+       dkim=none header.i=@dhl-delivery-support.com;
+       spf=fail smtp.mailfrom=dhl-delivery-support.com;
+       dmarc=fail header.from=dhl-delivery-support.com
+X-Mail-Scorer-Demo: simulated
+From: DHL Express <notice@dhl-delivery-support.com>
+To: noam@example.com
+Subject: Delivery failed - action required
+Date: Thu, 15 Oct 2026 08:00:00 +0000
+Message-ID: <demo-3-1792056873818@mail-scorer.demo>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="mixed-3"
+
+--mixed-3
+Content-Type: multipart/alternative; boundary="alt-xt8hsvsjmv"
+
+--alt-xt8hsvsjmv
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+V2UgY291bGQgbm90IGRlbGl2ZXIgeW91ciBwYXJjZWwuIE9wZW4gdGhlIGF0dGFjaGVkIGludm9p
+Y2UgYW5kIGNvbmZpcm0geW91ciBkZXRhaWxzIHRvIHJlc2NoZWR1bGUu
+--alt-xt8hsvsjmv
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+PHA+V2UgY291bGQgbm90IGRlbGl2ZXIgeW91ciBwYXJjZWwuPC9wPjxwPk9wZW4gdGhlIGF0dGFj
+aGVkIGludm9pY2UgYW5kIGNvbmZpcm0geW91ciBkZXRhaWxzIHRvIHJlc2NoZWR1bGUgZGVsaXZl
+cnkuPC9wPg==
+--alt-xt8hsvsjmv--
+
+--mixed-3
+Content-Type: text/html; name="Invoice_4471.pdf.html"
+Content-Disposition: attachment; filename="Invoice_4471.pdf.html"
+Content-Transfer-Encoding: base64
+
+SGFybWxlc3MgTWFpbCBTY29yZXIgZGVtbyBmaWxlLiBJdCBjb250YWlucyBubyBjb2RlLg==
+--mixed-3
+Content-Type: application/vnd.ms-word.document.macroEnabled.12; name="Shipping_Details.docm"
+Content-Disposition: attachment; filename="Shipping_Details.docm"
+Content-Transfer-Encoding: base64
+
+SGFybWxlc3MgTWFpbCBTY29yZXIgZGVtbyBmaWxlLiBJdCBjb250YWlucyBubyBjb2RlLg==
+--mixed-3--
