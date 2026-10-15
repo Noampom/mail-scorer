@@ -1,8 +1,6 @@
 /**
  * Mail Scorer - Gmail add-on.
  *
- * The add-on stays thin: extract the open message, send it to the backend,
- * render the result. No analysis logic and no third-party API keys live here.
  *
  * Config lives in Script Properties (Project Settings > Script properties):
  *   BACKEND_URL  e.g. https://mail-scorer-xxxx.a.run.app
